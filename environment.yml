@@ -1,0 +1,27 @@
+name: gs-coresets
+channels:
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip>=25
+  - cmake>=3.29
+  - ninja
+  - cuda-toolkit=12.8
+  - gcc_linux-64=13
+  - gxx_linux-64=13
+  - pip:
+      - torch==2.8.0
+      - torchvision==0.23.0
+      - torchaudio==2.8.0
+      - numpy==1.26.4
+      - matplotlib>=3.9
+      - opencv-python>=4.10
+      - pillow>=11
+      - plyfile>=1.0
+      - tqdm>=4.66
+      - joblib>=1.4
+      - ./external/gaussian_splatting/submodules/diff-gaussian-rasterization
+      - ./external/gaussian_splatting/submodules/simple-knn
+      - ./external/gaussian_splatting/submodules/fused-ssim
+      - -e .

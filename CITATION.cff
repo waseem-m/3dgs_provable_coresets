@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying paper."
+title: "Provable Pruning for Efficient 3D Gaussian Splatting via Coresets"
+type: software
+authors:
+  - family-names: Mousa
+    given-names: Waseem
+    affiliation: "Department of Computer Science, University of Haifa"
+  - family-names: Maalouf
+    given-names: Alaa
+    affiliation: "Department of Computer Science, University of Haifa"
+repository-code: "https://github.com/waseem-m/3dgs_provable_coresets"
+license: MIT
+version: 0.1.0
+date-released: 2026-07-01
+preferred-citation:
+  type: article
+  title: "Provable Pruning for Efficient 3D Gaussian Splatting via Coresets"
+  authors:
+    - family-names: Mousa
+      given-names: Waseem
+      affiliation: "Department of Computer Science, University of Haifa"
+    - family-names: Maalouf
+      given-names: Alaa
+      affiliation: "Department of Computer Science, University of Haifa"
+  year: 2026

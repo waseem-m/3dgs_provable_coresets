@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gs-coresets"
+version = "0.1.0"
+description = "Provable coreset construction and pruning for 3D Gaussian Splatting"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Waseem Mousa"},
+  {name = "Alaa Maalouf"},
+]
+keywords = ["3d-gaussian-splatting", "coresets", "pruning", "novel-view-synthesis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "matplotlib>=3.7",
+  "numpy>=1.26,<2.0",
+  "Pillow>=10",
+  "plyfile>=1.0",
+  "torch>=2.0",
+  "tqdm>=4.66",
+]
+
+[project.urls]
+Repository = "https://github.com/waseem-m/3dgs_provable_coresets"
+
+[project.scripts]
+gs-coresets = "gs_coresets.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["gs_coresets*"]
+exclude = ["external*"]
