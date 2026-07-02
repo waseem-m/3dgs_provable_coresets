@@ -1,9 +1,11 @@
 # Third-party software
 
-The Python source in this repository is released under the MIT License. Some
-utility code evolved from the MIT-licensed
-[`hbb1/torch-splatting`](https://github.com/hbb1/torch-splatting) project; its
-copyright notice is retained in [LICENSE](LICENSE).
+The Python source in this repository is released under the MIT License. Early
+experiments were informed by
+[`hbb1/torch-splatting`](https://github.com/hbb1/torch-splatting), an
+MIT-licensed pure-PyTorch 3DGS implementation by Binbin Huang. The released
+renderer was subsequently independently rewritten and does not intentionally
+incorporate source code from that project.
 
 The repository pins
 [`graphdeco-inria/gaussian-splatting`](https://github.com/graphdeco-inria/gaussian-splatting)
