@@ -18,10 +18,15 @@ dependency. Neither package imports the other. They may be installed together
 in a compatible environment; their Python packages and command names differ.
 Keep the source checkout in place when using the documented editable installs.
 
-The CUDA backend implements Gaussian-contribution sensitivities directly over
-stock GraphDECO rasterization. The PyTorch implementation retains the historical
-renderer and sensitivity definitions. They are not interchangeable numerical
-implementations; use separate output directories and record the backend.
+The **CUDA implementation** computes sensitivities directly within stock
+GraphDECO's rasterization pipeline. The **PyTorch implementation** uses a
+renderer and sensitivity computation written with PyTorch tensor operations,
+including batched multi-camera processing.
+
+The implementations differ in rasterization and sensitivity aggregation, so
+their rendered images and sensitivity values are not numerically equivalent.
+See the implementation-specific documentation for supported sensitivity modes;
+keep outputs separate and record which backend produced them.
 
 ## Installation and usage
 

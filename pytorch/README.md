@@ -2,8 +2,8 @@
 
 This package installs `gs-coresets-pytorch` and `gs_coresets_pytorch`.
 It does not import the sibling CUDA package or require its sensitivity
-extension. The existing PyTorch renderer and sensitivity mathematics are
-preserved, including their historical behavior.
+extension. Rasterization and sensitivity computation use PyTorch tensor
+operations and support batched multi-camera processing.
 
 “PyTorch” describes the sensitivity implementation, not a CPU-only application.
 Sensitivity workloads normally need an NVIDIA GPU. Stock GraphDECO rendering,
@@ -43,8 +43,9 @@ Available commands include `sens_cams`, `sens`, `coreset`, `all_coresets`,
 `classify`, `finetune`, and GraphDECO `train`, `render`, `metrics`,
 `full_eval` delegation.
 
-Sensitivity accepts historical `l1`/`l2`, RGB/no-color, max/mean, and all six
-historical granularities. There is no CUDA backend selector or L2-agg option
+Sensitivity supports `l1`/`l2`, RGB/no-color, max/mean reductions, and six
+granularities: channel, pixel, tile, image, batch, and scene.
+There is no CUDA backend selector or L2-agg option
 in this package. This renderer and the CUDA package's default GraphDECO-native
 renderer need not produce identical images or sensitivities.
 

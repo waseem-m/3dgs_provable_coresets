@@ -2,7 +2,7 @@
 
 This standalone package installs `gs-coresets` and `gs_coresets`.
 Sensitivity defaults to CUDA. Select `--backend pytorch` explicitly to use the
-historical PyTorch implementation. Missing CUDA support is an error, never an
+PyTorch tensor-based renderer and sensitivity implementation. Missing CUDA support is an error, never an
 automatic fallback.
 
 ## Source installation
@@ -30,11 +30,10 @@ PyTorch build. Rebuild the extension when changing PyTorch/CUDA versions.
 The environment recipe declares Python 3.10, PyTorch 2.8 and CUDA 12.8; this
 recipe is not a claim of completed GPU validation for that combination.
 
-The underlying CUDA backend was validated on the DLC A100 environment using
-PyTorch 2.0 and CUDA 12.1. The reorganized release and selection-output changes
-still require their own GPU packaging smoke test. Python packaging declares
-Python 3.10 or later; historical cluster compatibility does not replace that
-requirement.
+The release passed an A100 packaging smoke test with Python 3.10, PyTorch 2.0,
+and CUDA 12.1, covering independent installation, co-installation, sensitivity
+execution, and selection-output safety. This does not validate the separate
+PyTorch 2.8/CUDA 12.8 environment recipe. Python 3.10 or later is required.
 
 To co-install the PyTorch-only package into an already compatible environment,
 initialize its separate GraphDECO submodule as described in its README, then
@@ -68,9 +67,10 @@ GraphDECO's sorted tile lists are the exact sparse support: off-list Gaussians
 contribute zero and are not scanned.
 
 CUDA supports five granularities and max reduction only; camera chunking is
-execution scheduling, not a per-batch sensitivity query. The historical
-PyTorch backend retains its own definitions, L1/L2, mean/max and per-batch
-options. It is not used as the CUDA correctness reference.
+execution scheduling, not a per-batch sensitivity query. The PyTorch backend
+supports L1/L2, mean/max reductions, and per-batch queries in addition to the
+other five granularities. Its renderer and aggregation rules differ from the
+GraphDECO-native CUDA backend; switching backends can change sensitivity values.
 
 ## Outputs and selection
 
