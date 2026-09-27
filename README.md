@@ -11,7 +11,8 @@ Department of Computer Science, University of Haifa
 - Choose **CUDA** to compute sensitivities using stock GraphDECO rasterization.
 - Choose **PyTorch** to use or adapt a tensor-based renderer with batched
   multi-camera processing, without building the CUDA sensitivity extension.
-  This implementation also normally runs on an NVIDIA GPU.
+  It supports **both CPU and NVIDIA GPU execution** for sensitivity computation
+  and coreset selection; use `--device cpu` to run these steps without a GPU.
 
 | Folder | Command | Python module | Sensitivity backends |
 |---|---|---|---|

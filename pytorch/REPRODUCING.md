@@ -10,6 +10,11 @@ be readable by GraphDECO, and the pretrained model directory must contain
 `point_cloud/iteration_30000/point_cloud.ply`, `cameras.json`, and `cfg_args`.
 Replace the example paths below with your own.
 
+The sensitivity and selection examples use `--device cuda`. Replace it with
+`--device cpu` in those commands to run them on CPU. Camera extraction,
+GraphDECO rendering/evaluation, and fine-tuning have separate requirements;
+the full workflow below requires a CUDA environment.
+
 ## Paths and camera extraction
 
 ```bash

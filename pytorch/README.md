@@ -5,9 +5,15 @@ It does not import the sibling CUDA package or require its sensitivity
 extension. Rasterization and sensitivity computation use PyTorch tensor
 operations and support batched multi-camera processing.
 
-“PyTorch” describes the sensitivity implementation, not a CPU-only application.
-Sensitivity workloads normally need an NVIDIA GPU. The `train`, `render`, and
-`metrics` commands run stock GraphDECO tools and require their native dependencies.
+The PyTorch renderer, sensitivity computation, and coreset selection support
+**both CPU and NVIDIA GPU execution**. Pass `--device cpu` to `sens` or
+`coreset` to run without a GPU, or `--device cuda` to use an NVIDIA GPU.
+CPU execution is useful on machines without CUDA; large scenes can take
+substantially longer than on a GPU.
+
+The separate `train`, `render`, and `metrics` commands run stock GraphDECO tools
+and require their CUDA environment. CPU support for sensitivity and selection
+does not make those upstream tools CPU-compatible.
 
 ## Source installation
 
