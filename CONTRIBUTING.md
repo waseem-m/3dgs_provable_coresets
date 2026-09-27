@@ -12,7 +12,7 @@ gs-coresets --help
 gs-coresets-pytorch --help
 ```
 
-Validate numerical changes privately against the relevant backend's definition
+Check numerical changes against the relevant backend's definition
 using new output directories. Do not assume the PyTorch and CUDA sensitivity
 definitions are interchangeable. Do not include datasets, model artifacts, or
 machine-specific execution infrastructure in public changes.

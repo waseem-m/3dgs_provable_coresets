@@ -3,7 +3,7 @@
 ## 0.3.0
 
 - Separate, independently installable `cuda/` and `pytorch/` packages.
-- Combined `gs-coresets` package retains CUDA and explicit PyTorch backends;
+- `gs-coresets` provides CUDA and explicit PyTorch sensitivity backends;
   standalone `gs-coresets-pytorch` has its own Python namespace.
 - GraphDECO-native CUDA L1, channel-square L2 and RGB-aggregate L2-agg, with
   explicit no-color variants and per-output semantics metadata.
@@ -12,7 +12,8 @@
 - Optional lossless source PLY vertex-row selection and provenance manifests.
 - New coreset CLI outputs are staged and published without overwriting existing
   files; raw-selection manifests are published last.
-- Preserved historical PyTorch rendering and sensitivity mathematics.
+- Tensor-based PyTorch rasterization and sensitivity computation, with L1/L2,
+  RGB/no-color, max/mean, and channel/pixel/tile/image/batch/scene options.
 - Independently pinned GraphDECO dependencies and scoped licensing notices.
 
 ## 0.1.0

@@ -8,6 +8,11 @@ Department of Computer Science, University of Haifa
 
 ## Choose an implementation
 
+- Choose **CUDA** to compute sensitivities using stock GraphDECO rasterization.
+- Choose **PyTorch** to use or adapt a tensor-based renderer with batched
+  multi-camera processing, without building the CUDA sensitivity extension.
+  This implementation also normally runs on an NVIDIA GPU.
+
 | Folder | Command | Python module | Sensitivity backends |
 |---|---|---|---|
 | [cuda/](cuda/README.md) | `gs-coresets` | `gs_coresets` | CUDA (default), explicit PyTorch |
@@ -23,8 +28,10 @@ GraphDECO's rasterization pipeline. The **PyTorch implementation** uses a
 renderer and sensitivity computation written with PyTorch tensor operations,
 including batched multi-camera processing.
 
-The implementations differ in rasterization and sensitivity aggregation, so
-their rendered images and sensitivity values are not numerically equivalent.
+The renderers used during sensitivity computation differ in rasterization and
+aggregation, so switching sensitivity backends can change the results.
+The separate `render` command in both packages runs stock GraphDECO rendering;
+it does not select between the two sensitivity renderers.
 See the implementation-specific documentation for supported sensitivity modes;
 keep outputs separate and record which backend produced them.
 
@@ -44,9 +51,9 @@ There is no root-level Python distribution. Install from `cuda/` or
 `pytorch/`. CUDA extensions are built from source for the active PyTorch/CUDA
 environment; prebuilt wheels are not supplied.
 
-Both CLIs support sensitivity calculation, coreset construction, camera
-extraction, and GraphDECO training/rendering/evaluation delegation. Top-K now
-breaks equal ranking-score ties by ascending original Gaussian index. Optional
+Both CLIs support sensitivity calculation, coreset construction, and camera
+extraction, and run GraphDECO's training, rendering, and evaluation tools.
+Top-K breaks equal ranking-score ties by ascending original Gaussian index. Optional
 raw PLY preservation copies complete selected vertex records and records their
 identities and hashes in a selection-provenance JSON file. See each workflow.
 

@@ -1,8 +1,14 @@
 # Single-scene CLI workflow
 
 Start with a pretrained GraphDECO model and its dataset. Use an entirely new
-output directory and keep the input model immutable. The commands below start
-at iteration 30,000 and do not fine-tune unless you execute the optional section.
+output directory and keep the input model unchanged. The commands below start
+at iteration 30,000, retain 10% of the Gaussians by Top-K sensitivity, and do
+not fine-tune unless you execute the optional section.
+
+Install the package first, following its [README](README.md). The dataset must
+be readable by GraphDECO, and the pretrained model directory must contain
+`point_cloud/iteration_30000/point_cloud.ply`, `cameras.json`, and `cfg_args`.
+Replace the example paths below with your own.
 
 ## Paths and camera extraction
 
@@ -25,24 +31,24 @@ python -m gs_coresets_pytorch.cli sens_cams \
 
 ## Sensitivities
 
-This example requests RGB scene-level L1 from real training cameras.
+This example computes RGB L1 sensitivities from real training cameras. The
+PyTorch command writes all six granularity tensors; the selection step below
+uses the scene-level tensor.
 
 ```bash
 python -m gs_coresets_pytorch.cli sens \
   --model "$BASELINE_PLY" \
   --cams-train "$OUTPUT/cameras/extract_cameras_train.json" \
   --use-train-only --out "$OUTPUT/sensitivities" \
-  --no-per-channel --no-per-pixel --no-per-tile --no-per-image \
-  --no-per-batch --per-scene \
   --sensitivity-norm l1 --sensitivity-reduce max \
   --no-sensitivity-nocolor --device cuda
 ```
 
-Use an active SH degree matching the model when selecting CUDA inputs.
 The expected selection input is `per_scene_l1_max.pt`. Never reuse a
 sensitivity directory for a different backend or definition. A directory
-input to `coreset` resolves one exact filename; it does not infer backend
-compatibility from historical results.
+input to `coreset` resolves one exact filename from the requested granularity,
+norm, reduction, and color option. It does not verify backend metadata for you;
+select the directory produced by the intended sensitivity run.
 
 ## Top-K selection with exact source rows
 
@@ -59,17 +65,19 @@ cp "$BASELINE/cameras.json" "$BASELINE/cfg_args" "$MODEL/"
 ```
 
 Retained count is `max(1, round((1 - prune_ratio) * original_count))`, capped
-at the source count. Top-K ranks the existing normalized score vector using
-stable descending order, breaking equal scores by ascending original index.
-It does not use a seed. This differs from older native `torch.topk` tie
-membership. Returned vertex rows are ordered by original index.
+at the source count. Top-K normalizes the scores and ranks them in descending
+order, breaking equal scores by ascending original Gaussian index. It does
+not use a seed. This stable tie rule can differ from native `torch.topk`,
+which does not specify membership among tied cutoff scores. Output vertex
+rows are ordered by original index.
 
 `--preserve-raw-parameters` copies complete binary PLY vertex records,
 including non-unit stored quaternions and additional scalar properties.
 It requires unique, unit-weight selection and enough positive score support;
 nonfinite/negative scores, ASCII source PLYs and list-valued vertex properties
-are rejected. It is off by default; without it the historical Gaussian
-tensor-to-PLY conversion remains available.
+are rejected. This option is off by default. Without it, the output is
+constructed from loaded Gaussian tensors rather than copied vertex records;
+additional source properties are not preserved.
 
 Raw selection writes `point_cloud.ply.selection.json` alongside the PLY.
 The manifest records selected original indices, source/score/output hashes,
@@ -97,14 +105,20 @@ python -m gs_coresets_pytorch.cli render \
 python -m gs_coresets_pytorch.cli metrics --model_paths "$MODEL"
 ```
 
-These delegate to the pinned stock GraphDECO scripts, not the sensitivity
-renderer. Inspect `model/test/ours_30000/{renders,gt}/`,
-`model/results.json`, and `model/per_view.json`. Require matching view counts
-and finite PSNR/SSIM/LPIPS entries; do not rely on a wrapper exit code alone.
+These commands run the pinned stock GraphDECO scripts, not the renderer used
+inside sensitivity computation. Results are written under `$MODEL`:
+
+- `test/ours_30000/renders/`: rendered test views.
+- `test/ours_30000/gt/`: matching reference images.
+- `results.json`: aggregate PSNR, SSIM, and LPIPS.
+- `per_view.json`: per-view measurements.
+
+Check that render/reference counts match and all metric values are finite;
+a successful command exit alone does not establish a complete evaluation.
 
 ## Optional fine-tuning
 
-Only if recovery training is intended:
+To run 100 additional training iterations after selection:
 
 ```bash
 python -m gs_coresets_pytorch.cli finetune \

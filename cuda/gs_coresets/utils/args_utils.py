@@ -251,7 +251,7 @@ def _make_graphdeco_subparser(
     parser.add_argument(
         "--dry_run",
         action="store_true",
-        help="Print the delegated GraphDECO command and exit without running it.",
+        help="Print the GraphDECO command and exit without running it.",
     )
     parser.set_defaults(script_name=script, _forward_unknown=True, script_args=[])
     return _attach_handler(parser, name=name, handler=handler)
@@ -678,8 +678,8 @@ def add_sens_subparser(
         action=BooleanOptionalAction,
         default=None,
         help=(
-            "Historical PyTorch-only per-batch sensitivity. The corrected "
-            "CUDA backend rejects this obsolete granularity."
+            "Compute per-batch sensitivity with the PyTorch backend. "
+            "Not supported by the CUDA backend."
         ),
     )
     toggles.add_argument("--per-scene", action=BooleanOptionalAction, default=True)
@@ -688,7 +688,7 @@ def add_sens_subparser(
         choices=("l1", "l2", "l2-channel", "l2-agg"),
         default="l1",
         help=(
-            "Choose L1, existing channel-square L2 (`l2` or explicit "
+            "Choose L1, channel-square L2 (`l2` or explicit "
             "`l2-channel`), or CUDA-only RGB-sum-then-square `l2-agg`."
         ),
     )
@@ -697,8 +697,8 @@ def add_sens_subparser(
         choices=("max", "mean"),
         default="max",
         help=(
-            "Max is the corrected CUDA definition. Mean remains accepted only "
-            "by the historical PyTorch backend."
+            "CUDA supports max reduction only. The PyTorch backend supports "
+            "both max and mean."
         ),
     )
     toggles.add_argument(
@@ -968,7 +968,7 @@ def build_commands_parser(
         "-v",
         "--verbose",
         action="store_true",
-        help="Echo delegated modules and additional diagnostics.",
+        help="Show invoked commands and additional diagnostics.",
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)

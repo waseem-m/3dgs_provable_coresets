@@ -6,14 +6,15 @@ extension. Rasterization and sensitivity computation use PyTorch tensor
 operations and support batched multi-camera processing.
 
 “PyTorch” describes the sensitivity implementation, not a CPU-only application.
-Sensitivity workloads normally need an NVIDIA GPU. Stock GraphDECO rendering,
-training and evaluation delegation also requires its native dependencies.
+Sensitivity workloads normally need an NVIDIA GPU. The `train`, `render`, and
+`metrics` commands run stock GraphDECO tools and require their native dependencies.
 
 ## Source installation
 
-From this directory:
+From the repository root:
 
 ```bash
+cd pytorch
 git submodule update --init -- external/gaussian_splatting
 git -C external/gaussian_splatting submodule update --init --recursive -- \
   submodules/diff-gaussian-rasterization submodules/simple-knn submodules/fused-ssim
@@ -27,10 +28,13 @@ python -m pip install --no-build-isolation --no-deps -e .
 python -m gs_coresets_pytorch.cli --help
 ```
 
-The environment recipe declares Python 3.10, PyTorch 2.8 and CUDA 12.8.
-It is an installation recipe, not a statement that this reorganized package
-has completed GPU validation under that environment. Native dependencies must
-be built for the active PyTorch/CUDA combination.
+Python 3.10 or later is required. Build native dependencies for the active
+PyTorch/CUDA combination.
+
+| Environment | Verification status |
+|---|---|
+| Python 3.10, PyTorch 2.0, CUDA 12.1, NVIDIA A100 | Installation, co-installation, sensitivity execution, and selection-output safety tested |
+| Python 3.10, PyTorch 2.8, CUDA 12.8 (`environment.yml`) | Provided installation recipe; not GPU-tested for this release |
 
 The CUDA package can coexist in the same compatible environment, using a
 separate command and namespace. No files from its directory are required for
@@ -40,20 +44,21 @@ this package's installation or operation.
 
 Use `python -m gs_coresets_pytorch.cli` or `gs-coresets-pytorch`.
 Available commands include `sens_cams`, `sens`, `coreset`, `all_coresets`,
-`classify`, `finetune`, and GraphDECO `train`, `render`, `metrics`,
-`full_eval` delegation.
+`classify`, and `finetune`. The `train`, `render`, `metrics`, and `full_eval`
+commands run the corresponding GraphDECO tools.
 
 Sensitivity supports `l1`/`l2`, RGB/no-color, max/mean reductions, and six
 granularities: channel, pixel, tile, image, batch, and scene.
-There is no CUDA backend selector or L2-agg option
-in this package. This renderer and the CUDA package's default GraphDECO-native
-renderer need not produce identical images or sensitivities.
+There is no CUDA backend selector or L2-agg option in this package. Its
+sensitivity renderer and aggregation rules differ from the GraphDECO-native
+CUDA sensitivity backend, so their sensitivity outputs are not interchangeable.
+The `render` command uses stock GraphDECO, not this PyTorch sensitivity renderer.
 
-Selection improvements are shared with the combined package: stable Top-K
-ties, optional exact raw PLY rows, and selection-provenance manifests. These
-change selection/I/O behavior, not renderer or sensitivity equations.
-Stable cutoff ties may select different Gaussians than older native
-`torch.topk` calls.
+Top-K selects the highest-scoring Gaussians, breaking equal-score ties by
+ascending original Gaussian index. Enable `--preserve-raw-parameters` to copy
+complete original PLY vertex rows and save a JSON record of the selected
+indices and file hashes. This stable tie rule can differ from native
+`torch.topk`, which does not specify membership among tied cutoff scores.
 
 See [REPRODUCING.md](REPRODUCING.md) for a single-scene workflow.
 

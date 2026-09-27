@@ -2,9 +2,9 @@
 
 ## Boundaries
 
-The Python package remains responsible for PLY and camera I/O, command-line
-handling, camera grouping, scene aggregation, coreset sampling, and GraphDECO
-training/evaluation delegation. `diff_gaussian_sensitivity` is a forward-only
+The Python package handles PLY and camera I/O, command-line arguments, camera
+grouping, scene aggregation, coreset selection, and calls to GraphDECO's
+training and evaluation tools. `diff_gaussian_sensitivity` is a forward-only
 CUDA extension. It is not used for training and has no backward operation.
 
 The extension is derived from GraphDECO rasterizer commit
@@ -76,10 +76,15 @@ There is no full-model scan per pixel or tile and no Gaussian×pixel tensor.
 ## Backend semantics
 
 `gs-coresets sens` defaults to `--backend cuda`. This backend uses GraphDECO
-projection and compositing semantics. `--backend pytorch` uses the regular
-vectorized PyTorch renderer and is never selected automatically. The historical
-PyTorch implementation remains unchanged and is not a CUDA correctness oracle.
+projection and compositing semantics. `--backend pytorch` explicitly selects
+the vectorized PyTorch renderer. The backends have different rendering and
+sensitivity aggregation rules; CUDA correctness is defined by GraphDECO's
+accepted contributions and the sensitivity equations above, not agreement
+with the PyTorch backend.
 
-Corrected CUDA supports maximum reduction for channel, pixel, tile, and image
+CUDA supports maximum reduction for channel, pixel, tile, and image
 queries plus a single global scene ratio. Per-batch and mean sensitivity are not
-part of the corrected CUDA method.
+supported by the CUDA backend.
+
+Both packages' `render` commands run the pinned stock GraphDECO rendering
+script. Backend selection applies to `sens`, not to that rendering command.

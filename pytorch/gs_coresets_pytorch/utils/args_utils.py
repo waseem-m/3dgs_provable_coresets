@@ -252,7 +252,7 @@ def _make_graphdeco_subparser(
     parser.add_argument(
         "--dry_run",
         action="store_true",
-        help="Print the delegated GraphDECO command and exit without running it.",
+        help="Print the GraphDECO command and exit without running it.",
     )
     parser.set_defaults(script_name=script, _forward_unknown=True, script_args=[])
     return _attach_handler(parser, name=name, handler=handler)
@@ -914,7 +914,7 @@ def build_commands_parser(
         "-v",
         "--verbose",
         action="store_true",
-        help="Echo delegated modules and additional diagnostics.",
+        help="Show invoked commands and additional diagnostics.",
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)

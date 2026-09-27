@@ -2,15 +2,17 @@
 
 This standalone package installs `gs-coresets` and `gs_coresets`.
 Sensitivity defaults to CUDA. Select `--backend pytorch` explicitly to use the
-PyTorch tensor-based renderer and sensitivity implementation. Missing CUDA support is an error, never an
-automatic fallback.
+PyTorch tensor-based renderer and sensitivity implementation. If the CUDA
+extension is unavailable, the command reports an error rather than switching
+backends.
 
 ## Source installation
 
-From this directory, initialize the pinned dependency and its required nested
-modules (the optional viewer is not needed):
+From the repository root, enter `cuda/`, then initialize the pinned dependency
+and its required nested modules (the optional viewer is not needed):
 
 ```bash
+cd cuda
 git submodule update --init -- external/gaussian_splatting
 git -C external/gaussian_splatting submodule update --init --recursive -- \
   submodules/diff-gaussian-rasterization submodules/simple-knn submodules/fused-ssim
@@ -27,13 +29,12 @@ python -m gs_coresets.cli --help
 
 Use a CUDA-capable build machine and a CUDA toolkit compatible with the installed
 PyTorch build. Rebuild the extension when changing PyTorch/CUDA versions.
-The environment recipe declares Python 3.10, PyTorch 2.8 and CUDA 12.8; this
-recipe is not a claim of completed GPU validation for that combination.
+Python 3.10 or later is required.
 
-The release passed an A100 packaging smoke test with Python 3.10, PyTorch 2.0,
-and CUDA 12.1, covering independent installation, co-installation, sensitivity
-execution, and selection-output safety. This does not validate the separate
-PyTorch 2.8/CUDA 12.8 environment recipe. Python 3.10 or later is required.
+| Environment | Verification status |
+|---|---|
+| Python 3.10, PyTorch 2.0, CUDA 12.1, NVIDIA A100 | Installation, co-installation, sensitivity execution, and selection-output safety tested |
+| Python 3.10, PyTorch 2.8, CUDA 12.8 (`environment.yml`) | Provided installation recipe; not GPU-tested for this release |
 
 To co-install the PyTorch-only package into an already compatible environment,
 initialize its separate GraphDECO submodule as described in its README, then
@@ -74,7 +75,7 @@ GraphDECO-native CUDA backend; switching backends can change sensitivity values.
 
 ## Outputs and selection
 
-Existing CUDA L2 files remain `per_<granularity>_l2_max.pt`.
+Standard L2 writes `per_<granularity>_l2_max.pt`.
 L2-agg writes `per_<pixel|tile|image|scene>_l2_agg_max.pt`; its optional channel
 output is ordinary `per_channel_l2_max.pt`. No-color adds `_nocolor` before
 `.pt`. Per-output metadata identifies ordinary channel L2 even within an
