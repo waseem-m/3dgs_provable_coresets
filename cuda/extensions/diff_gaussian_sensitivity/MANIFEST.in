@@ -1,0 +1,6 @@
+include LICENSE.md
+recursive-include cuda_rasterizer *.cu *.h
+recursive-include diff_gaussian_sensitivity *.py
+recursive-include third_party/glm *.hpp *.h *.inl
+include third_party/glm/copying.txt
+include *.cu *.cpp *.h

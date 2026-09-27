@@ -10,9 +10,7 @@ authors:
     given-names: Alaa
     affiliation: "Department of Computer Science, University of Haifa"
 repository-code: "https://github.com/waseem-m/3dgs_provable_coresets"
-license: MIT
-version: 0.1.0
-date-released: 2026-07-01
+version: 0.3.0
 preferred-citation:
   type: article
   title: "Provable Pruning for Efficient 3D Gaussian Splatting via Coresets"

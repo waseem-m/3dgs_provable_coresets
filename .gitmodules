@@ -1,3 +1,6 @@
-[submodule "external/gaussian_splatting"]
-	path = external/gaussian_splatting
+[submodule "pytorch/external/gaussian_splatting"]
+	path = pytorch/external/gaussian_splatting
+	url = https://github.com/graphdeco-inria/gaussian-splatting.git
+[submodule "cuda/external/gaussian_splatting"]
+	path = cuda/external/gaussian_splatting
 	url = https://github.com/graphdeco-inria/gaussian-splatting.git
